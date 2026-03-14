@@ -1,0 +1,44 @@
+﻿<Window x:Class="ElectricityApp.Views.DebtorsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Список должников" 
+        Height="400" Width="700"
+        WindowStartupLocation="CenterOwner">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" 
+                   Text="Абоненты с задолженностью более 30 дней"
+                   FontSize="16"
+                   FontWeight="Bold"
+                   HorizontalAlignment="Center"
+                   Margin="0,0,0,10"/>
+
+        <DataGrid Grid.Row="1" 
+                  Name="dgDebtors"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  Margin="0,0,0,10">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="№" Binding="{Binding Id}" Width="50"/>
+                <DataGridTextColumn Header="Фамилия" Binding="{Binding LastName}" Width="150"/>
+                <DataGridTextColumn Header="Адрес" Binding="{Binding Address}" Width="200"/>
+                <DataGridTextColumn Header="Последняя оплата" 
+                                    Binding="{Binding LastPaymentDate, StringFormat={}{0:dd.MM.yyyy}}" 
+                                    Width="120"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Button Grid.Row="2" 
+                Content="Закрыть" 
+                Click="btnClose_Click"
+                Width="100" Height="30"
+                HorizontalAlignment="Center"/>
+    </Grid>
+</Window>
