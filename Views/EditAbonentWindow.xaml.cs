@@ -3,22 +3,32 @@ using ElectricityApp.Models;
 
 namespace ElectricityApp
 {
-    public partial class AddAbonentWindow : Window
+    public partial class EditAbonentWindow : Window
     {
         private readonly Database _database;
+        private readonly Abonent _abonent;
 
-        public AddAbonentWindow(Database database)
+        public EditAbonentWindow(Database database, Abonent abonent)
         {
             InitializeComponent();
             _database = database;
+            _abonent = abonent;
+
+            LoadData();
             LoadLocalities();
+        }
+
+        private void LoadData()
+        {
+            txtFullName.Text = _abonent.LastName;
+            txtAddress.Text = _abonent.Address;
         }
 
         private void LoadLocalities()
         {
             var localities = _database.GetAllLocalities();
             cmbLocality.ItemsSource = localities;
-            cmbLocality.SelectedValue = 1;
+            cmbLocality.SelectedValue = _abonent.LocalityId;
         }
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
@@ -40,21 +50,13 @@ namespace ElectricityApp
 
             try
             {
-                var abonent = new Abonent
-                {
-                    LastName = txtFullName.Text.Trim(),
-                    Address = txtAddress.Text.Trim(),
-                    LocalityId = (int)cmbLocality.SelectedValue
-                };
+                _abonent.LastName = txtFullName.Text.Trim();
+                _abonent.Address = txtAddress.Text.Trim();
+                _abonent.LocalityId = (int)cmbLocality.SelectedValue;
 
-                _database.AddAbonent(abonent);
+                _database.UpdateAbonent(_abonent);
 
-                var selectedLocality = (Locality)cmbLocality.SelectedItem;
-
-                MessageBox.Show(
-                    $"Абонент \"{abonent.LastName}\" успешно добавлен!\n" +
-                    $"Тип местности: {selectedLocality.Name}\n" +
-                    $"Коэффициент тарифа: ×{selectedLocality.TariffCoefficient:F1}",
+                MessageBox.Show($"Данные абонента \"{_abonent.LastName}\" успешно обновлены!",
                     "Успех",
                     MessageBoxButton.OK,
                     MessageBoxImage.Information);
@@ -64,7 +66,7 @@ namespace ElectricityApp
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при добавлении абонента: {ex.Message}",
+                MessageBox.Show($"Ошибка при обновлении данных: {ex.Message}",
                     "Ошибка",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);

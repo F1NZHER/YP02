@@ -4,21 +4,21 @@ using ElectricityApp.Models;
 
 namespace ElectricityApp
 {
-    public partial class DebtorsWindow : Window
+    public partial class TariffHistoryWindow : Window
     {
         private readonly Database _database;
 
-        public DebtorsWindow(Database database)
+        public TariffHistoryWindow(Database database)
         {
             InitializeComponent();
             _database = database;
-            LoadDebtors();
+            LoadTariffHistory();
         }
 
-        private void LoadDebtors()
+        private void LoadTariffHistory()
         {
-            var debtors = _database.GetDebtors();
-            dgDebtors.ItemsSource = debtors;
+            var history = _database.GetTariffHistory();
+            dgTariffHistory.ItemsSource = history;
         }
 
         private void btnClose_Click(object sender, RoutedEventArgs e)

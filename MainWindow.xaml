@@ -2,10 +2,13 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Учёт оплаты электроэнергии" 
-        Height="600" Width="1000"
-        WindowStartupLocation="CenterScreen">
+        Height="700" 
+        Width="1200"
+        WindowStartupLocation="CenterScreen"
+        Loaded="Window_Loaded"
+        WindowState="Maximized">
 
-    <Grid Margin="10">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -13,89 +16,340 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Заголовок -->
-        <TextBlock Grid.Row="0" 
-                   Text="Учёт оплаты электроэнергии" 
-                   FontSize="20" 
-                   FontWeight="Bold"
-                   HorizontalAlignment="Center"
-                   Margin="0,0,0,10"/>
+        <!-- ===== МЕНЮ ===== -->
+        <Menu Grid.Row="0" Background="#F5F5F5">
+            <MenuItem Header="_Файл">
+                <MenuItem Header="_Экспорт всех абонентов" Click="btnExportAll_Click">
+                    <MenuItem.Icon>
+                        <TextBlock Text="📊" FontSize="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Экспорт _должников" Click="btnExportDebtors_Click">
+                    <MenuItem.Icon>
+                        <TextBlock Text="📊" FontSize="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Header="В_ыход" Click="Exit_Click">
+                    <MenuItem.Icon>
+                        <TextBlock Text="🚪" FontSize="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
 
-        <!-- Кнопки управления -->
-        <StackPanel Grid.Row="1" 
-                    Orientation="Horizontal" 
-                    HorizontalAlignment="Center"
-                    Margin="0,0,0,10">
+            <MenuItem Header="_Абоненты">
+                <MenuItem Header="_Добавить абонента" Click="btnAddAbonent_Click">
+                    <MenuItem.Icon>
+                        <TextBlock Text="➕" FontSize="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Редактировать" Click="btnEditAbonent_Click">
+                    <MenuItem.Icon>
+                        <TextBlock Text="✏️" FontSize="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Удалить" Click="btnDeleteAbonent_Click">
+                    <MenuItem.Icon>
+                        <TextBlock Text="🗑️" FontSize="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Header="Список _должников" Click="btnDebtors_Click">
+                    <MenuItem.Icon>
+                        <TextBlock Text="⚠️" FontSize="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
 
-            <Button Name="btnAddAbonent" 
-                    Content="Добавить абонента" 
+            <MenuItem Header="_Платежи">
+                <MenuItem Header="_Добавить платёж" Click="btnAddPayment_Click">
+                    <MenuItem.Icon>
+                        <TextBlock Text="💰" FontSize="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+
+            <MenuItem Header="_Справочники">
+                <MenuItem Header="_Типы местности" Click="btnLocality_Click">
+                    <MenuItem.Icon>
+                        <TextBlock Text="🏘️" FontSize="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+
+            <MenuItem Header="_Сервис">
+                <MenuItem Header="_Обновить данные" Click="btnRefresh_Click">
+                    <MenuItem.Icon>
+                        <TextBlock Text="🔄" FontSize="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Загрузить _тестовые данные" Click="btnTestData_Click">
+                    <MenuItem.Icon>
+                        <TextBlock Text="📝" FontSize="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+
+            <MenuItem Header="_Справка">
+                <MenuItem Header="_О программе" Click="About_Click">
+                    <MenuItem.Icon>
+                        <TextBlock Text="ℹ️" FontSize="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+
+        <!-- ===== ПАНЕЛЬ ИНСТРУМЕНТОВ (ТОЛЬКО ГЛАВНЫЕ КНОПКИ) ===== -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,10,10,10" Background="White">
+
+            <!-- Группа: Абоненты -->
+            <Button x:Name="btnAddAbonent" 
+                    Content="➕ Добавить абонента" 
+                    Width="180" 
+                    Height="45"
+                    Background="#4CAF50"
+                    Foreground="White"
+                    FontSize="13"
+                    FontWeight="Bold"
+                    Margin="0,0,10,0"
                     Click="btnAddAbonent_Click"
-                    Width="130" Height="35" Margin="5"
-                    Background="#4CAF50" Foreground="White"
-                    BorderThickness="0"/>
+                    Cursor="Hand">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" 
+                                            CornerRadius="5" 
+                                            Padding="10">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#45a049"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
 
-            <Button Name="btnAddPayment" 
-                    Content="Добавить платёж" 
+            <!-- Группа: Платежи -->
+            <Button x:Name="btnAddPayment" 
+                    Content="💰 Добавить платёж" 
+                    Width="180" 
+                    Height="45"
+                    Background="#2196F3"
+                    Foreground="White"
+                    FontSize="13"
+                    FontWeight="Bold"
+                    Margin="0,0,10,0"
                     Click="btnAddPayment_Click"
-                    Width="130" Height="35" Margin="5"
-                    Background="#2196F3" Foreground="White"
-                    BorderThickness="0"/>
+                    IsEnabled="False"
+                    Cursor="Hand">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" 
+                                            CornerRadius="5" 
+                                            Padding="10">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#1e88e5"/>
+                                        </Trigger>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter Property="Background" Value="#B0BEC5"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
 
-            <Button Name="btnDebtors" 
-                    Content="Список должников" 
+            <!-- Группа: Отчёты -->
+            <Button x:Name="btnDebtors" 
+                    Content="⚠️ Должники" 
+                    Width="140" 
+                    Height="45"
+                    Background="#FF9800"
+                    Foreground="White"
+                    FontSize="13"
+                    FontWeight="Bold"
+                    Margin="0,0,10,0"
                     Click="btnDebtors_Click"
-                    Width="130" Height="35" Margin="5"
-                    Background="#FF9800" Foreground="White"
-                    BorderThickness="0"/>
+                    Cursor="Hand">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" 
+                                            CornerRadius="5" 
+                                            Padding="10">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#f57c00"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
 
-            <Button Name="btnRefresh" 
-                    Content="Обновить" 
+            <!-- Разделитель -->
+            <Rectangle Width="1" Fill="#E0E0E0" Margin="10,5"/>
+
+            <!-- Группа: Справочники -->
+            <Button x:Name="btnLocality" 
+                    Content="🏘️ Местности" 
+                    Width="130" 
+                    Height="45"
+                    Background="#FF5722"
+                    Foreground="White"
+                    FontSize="13"
+                    Margin="10,0,10,0"
+                    Click="btnLocality_Click"
+                    Cursor="Hand">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" 
+                                            CornerRadius="5" 
+                                            Padding="10">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#e64a19"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+            <!-- Группа: Обновление -->
+            <Button x:Name="btnRefresh" 
+                    Content="🔄 Обновить" 
+                    Width="120" 
+                    Height="45"
+                    Background="#9E9E9E"
+                    Foreground="White"
+                    FontSize="13"
+                    Margin="10,0,10,0"
                     Click="btnRefresh_Click"
-                    Width="130" Height="35" Margin="5"
-                    Background="#9C27B0" Foreground="White"
-                    BorderThickness="0"/>
-
-            <Button Name="btnTestData" 
-                    Content="Тест данные" 
-                    Click="btnTestData_Click"
-                    Width="130" Height="35" Margin="5"
-                    Background="#607D8B" Foreground="White"
-                    BorderThickness="0"/>
+                    Cursor="Hand">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" 
+                                            CornerRadius="5" 
+                                            Padding="10">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#757575"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <TextBox x:Name="txtSearch" 
+         Width="250" 
+         Height="30"
+         Margin="10"
+         VerticalContentAlignment="Center"
+         TextChanged="txtSearch_TextChanged"/>
         </StackPanel>
 
-        <!-- Таблица с абонентами -->
-        <GroupBox Grid.Row="2" Header="Список абонентов" Margin="0,0,0,10">
-            <DataGrid Name="dgAbonents"
-                      AutoGenerateColumns="False"
-                      IsReadOnly="True"
-                      Margin="5">
+        <!-- ===== ТАБЛИЦА АБОНЕНТОВ ===== -->
+        <DataGrid Grid.Row="2" 
+                  x:Name="dgAbonents" 
+                  AutoGenerateColumns="False" 
+                  IsReadOnly="True"
+                  CanUserAddRows="False"
+                  SelectionChanged="dgAbonents_SelectionChanged"
+                  Margin="10,0,10,10"
+                  Background="White"
+                  BorderBrush="#E0E0E0"
+                  RowHeight="35"
+                  ColumnHeaderHeight="40">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="№" Binding="{Binding Id}" Width="60"/>
+                <DataGridTextColumn Header="ФИО" Binding="{Binding LastName}" Width="250"/>
+                <DataGridTextColumn Header="Адрес" Binding="{Binding Address}" Width="300"/>
+                <DataGridTextColumn Header="Местность" Binding="{Binding Locality.Name}" Width="150"/>
+                <DataGridTextColumn Header="Последняя оплата" 
+                                    Binding="{Binding LastPaymentDate, StringFormat={}{0:dd.MM.yyyy}}" 
+                                    Width="130"/>
+                <DataGridCheckBoxColumn Header="Должник" 
+                                        Binding="{Binding HasDebt, Mode=OneWay}" 
+                                        Width="80"/>
+            </DataGrid.Columns>
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="#2196F3"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="Padding" Value="10,5"/>
+                    <Setter Property="BorderBrush" Value="#1976D2"/>
+                    <Setter Property="BorderThickness" Value="0,0,1,0"/>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
+            <DataGrid.CellStyle>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="Padding" Value="5,0"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="#BBDEFB"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.CellStyle>
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding HasDebt}" Value="True">
+                            <Setter Property="Background" Value="#FFEBEE"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+        </DataGrid>
 
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="№" Binding="{Binding Id}" Width="50"/>
-                    <DataGridTextColumn Header="Фамилия" Binding="{Binding LastName}" Width="150"/>
-                    <DataGridTextColumn Header="Адрес" Binding="{Binding Address}" Width="200"/>
-                    <DataGridTextColumn Header="Последняя оплата" 
-                    Binding="{Binding LastPaymentDate, StringFormat={}{0:dd.MM.yyyy}}" 
-                    Width="120"/>
-                    <DataGridTextColumn Header="Платежей" 
-                                        Binding="{Binding Payments.Count}" 
-                                        Width="70"/>
-                    <DataGridCheckBoxColumn Header="Должник" 
-                                            Binding="{Binding HasDebt, Mode=OneWay}" 
-                                            IsReadOnly="True"
-                                            Width="80"/>
-                </DataGrid.Columns>
-            </DataGrid>
-        </GroupBox>
-
-        <!-- Статусная строка -->
-        <StatusBar Grid.Row="3">
+        <!-- ===== СТРОКА СОСТОЯНИЯ ===== -->
+        <StatusBar Grid.Row="3" Background="#F5F5F5" BorderBrush="#E0E0E0">
             <StatusBarItem>
-                <TextBlock Name="tbStatus" Text="Готов к работе"/>
+                <TextBlock x:Name="tbStatus" Text="Приложение готово к работе" FontWeight="Bold"/>
             </StatusBarItem>
             <Separator/>
             <StatusBarItem>
-                <TextBlock Name="tbCount"/>
+                <TextBlock x:Name="tbCount" Text="Всего записей: 0"/>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <TextBlock Text="© 2026 Учёт электроэнергии"/>
             </StatusBarItem>
         </StatusBar>
     </Grid>

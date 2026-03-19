@@ -1,0 +1,21 @@
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Файлы сборки
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+
+# SQLite база данных
+*.db
+*.sqlite
+
+# Временные файлы
+*.log
+*.tmp

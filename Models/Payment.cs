@@ -1,20 +1,14 @@
-﻿using System;
-
-namespace ElectricityApp.Models
+﻿namespace ElectricityApp.Models
 {
     public class Payment
     {
         public int Id { get; set; }
-        public int AbonentId { get; set; }          // номер абонента
-        public DateTime PaymentDate { get; set; }    // дата оплаты
-        public double PrevValue { get; set; }        // предыдущие показания
-        public double CurrentValue { get; set; }     // текущие показания
-        public double Amount { get; set; }           // размер оплаты
+        public int AbonentId { get; set; }
+        public DateTime PaymentDate { get; set; }
+        public double PrevValue { get; set; }
+        public double CurrentValue { get; set; }
+        public double Amount { get; set; }
 
-        // Расход электроэнергии
-        public double Consumption
-        {
-            get { return CurrentValue - PrevValue; }
-        }
+        public double Consumption => CurrentValue - PrevValue;
     }
 }

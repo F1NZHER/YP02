@@ -1,0 +1,99 @@
+﻿<Window x:Class="ElectricityApp.LocalityWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Управление типами местности" 
+        Height="550" 
+        Width="900"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок -->
+        <TextBlock Grid.Row="0" 
+                   Text="Справочник типов местности" 
+                   FontSize="18" 
+                   FontWeight="Bold"
+                   Margin="0,0,0,15"/>
+
+        <!-- Таблица местностей -->
+        <DataGrid Grid.Row="1" 
+                  x:Name="dgLocalities" 
+                  AutoGenerateColumns="False" 
+                  IsReadOnly="True"
+                  CanUserAddRows="False"
+                  SelectionChanged="dgLocalities_SelectionChanged"
+                  Margin="0,0,0,15">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="№" 
+                                    Binding="{Binding Id}" 
+                                    Width="50"/>
+                <DataGridTextColumn Header="Название" 
+                                    Binding="{Binding Name}" 
+                                    Width="200"/>
+                <DataGridTextColumn Header="Тип" 
+                                    Binding="{Binding Type}" 
+                                    Width="150"/>
+                <DataGridTextColumn Header="Регион" 
+                                    Binding="{Binding Region}" 
+                                    Width="200"/>
+                <DataGridTextColumn Header="Коэффициент" 
+                                    Binding="{Binding TariffCoefficient, StringFormat={}{0:P0}}" 
+                                    Width="120"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Кнопки управления -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button x:Name="btnAdd" 
+                    Content="➕ Добавить" 
+                    Width="130" 
+                    Height="40"
+                    Background="#4CAF50"
+                    Foreground="White"
+                    FontSize="12"
+                    FontWeight="Bold"
+                    Margin="0,0,10,0"
+                    Click="btnAdd_Click"/>
+
+            <Button x:Name="btnEdit" 
+                    Content="✏️ Изменить" 
+                    Width="130" 
+                    Height="40"
+                    Background="#2196F3"
+                    Foreground="White"
+                    FontSize="12"
+                    FontWeight="Bold"
+                    Margin="0,0,10,0"
+                    IsEnabled="False"
+                    Click="btnEdit_Click"/>
+
+            <Button x:Name="btnDelete" 
+                    Content="🗑️ Удалить" 
+                    Width="130" 
+                    Height="40"
+                    Background="#F44336"
+                    Foreground="White"
+                    FontSize="12"
+                    FontWeight="Bold"
+                    Margin="0,0,10,0"
+                    IsEnabled="False"
+                    Click="btnDelete_Click"/>
+
+            <Button x:Name="btnClose" 
+                    Content="Закрыть" 
+                    Width="130" 
+                    Height="40"
+                    Background="#9E9E9E"
+                    Foreground="White"
+                    FontSize="12"
+                    FontWeight="Bold"
+                    Click="btnClose_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>
